@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: movie-archive
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        sync: false  # You will set this manually in Render dashboard

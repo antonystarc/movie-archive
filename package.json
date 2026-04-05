@@ -1,0 +1,15 @@
+{
+  "name": "movie-archive",
+  "version": "1.0.0",
+  "description": "Movie archive app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  }
+}

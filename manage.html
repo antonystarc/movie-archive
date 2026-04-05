@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Movies - Movie Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e94560;
+        }
+        header h1 {
+            font-size: 1.8rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .logout-btn {
+            padding: 10px 20px;
+            background: #e94560;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        .logout-btn:hover {
+            background: #ff6b6b;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 50px;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 40px;
+        }
+        .form-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            height: fit-content;
+        }
+        .form-section h2 {
+            margin-bottom: 25px;
+            color: #e94560;
+            font-size: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #e94560;
+        }
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .form-group input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .form-group input[type="file"]::-webkit-file-upload-button {
+            background: #e94560;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        .image-preview .placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #e94560;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #ff6b6b;
+        }
+        .movies-list {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+        .movies-list h2 {
+            margin-bottom: 25px;
+            color: #e94560;
+            font-size: 1.5rem;
+        }
+        .save-status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .save-status.success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #90ee90;
+            display: block;
+        }
+        .save-status.error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            display: block;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .movie-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(233, 69, 96, 0.2);
+        }
+        .movie-item .poster {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #2d3561, #e94560);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        .movie-item .poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .movie-item .info {
+            padding: 15px;
+        }
+        .movie-item .info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        .movie-item .info p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .movie-item .rating {
+            color: #ffd700;
+            margin-top: 5px;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e94560;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        .delete-btn:hover {
+            background: #ff0000;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manage Movies</h1>
+        <div class="user-info">
+            <span id="userDisplay"></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Add New Movie</h2>
+            <form id="movieForm">
+                <div class="form-group">
+                    <label for="movieTitle">Movie Title</label>
+                    <input type="text" id="movieTitle" name="title" placeholder="Enter movie title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="movieImage">Movie Poster</label>
+                    <input type="file" id="movieImage" name="image" accept="image/*" required>
+                    <div class="image-preview" id="imagePreview">
+                        <span class="placeholder">No image selected</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="movieGenre">Genre</label>
+                    <select id="movieGenre" name="genre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Action">Action</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Animation">Animation</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Crime">Crime</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Musical">Musical</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Superhero">Superhero</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="War">War</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="movieYear">Year</label>
+                    <select id="movieYear" name="year" required>
+                        <option value="">Select Year</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="movieRating">Rating (1-10)</label>
+                    <input type="number" id="movieRating" name="rating" min="1" max="10" step="0.1" placeholder="Enter rating" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Add Movie</button>
+            </form>
+        </div>
+
+        <div class="movies-list">
+            <h2>All Movies (JSON Database)</h2>
+            <div id="saveStatus" class="save-status"></div>
+            <div class="movies-grid" id="moviesContainer">
+                <div class="empty-state">
+                    <h3>Loading movies...</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if logged in
+        const loggedInUser = sessionStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('userDisplay').textContent = 'Welcome, ' + loggedInUser;
+        }
+
+        let movies = [];
+
+        // Load movies from JSON API
+        async function loadMovies() {
+            try {
+                const response = await fetch('/api/movies');
+                const data = await response.json();
+                movies = data.movies || [];
+                renderMovies();
+            } catch (error) {
+                showStatus('Error loading movies from JSON file', 'error');
+                document.getElementById('moviesContainer').innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>Error loading movies</h3>
+                        <p>Make sure the server is running</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Save movies to JSON API
+        async function saveMovies() {
+            try {
+                const response = await fetch('/api/movies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ movies: movies })
+                });
+                
+                if (response.ok) {
+                    showStatus('Movies saved to JSON file successfully!', 'success');
+                    renderMovies();
+                } else {
+                    showStatus('Error saving to JSON file', 'error');
+                }
+            } catch (error) {
+                showStatus('Error saving to JSON file: ' + error.message, 'error');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const status = document.getElementById('saveStatus');
+            status.textContent = message;
+            status.className = 'save-status ' + type;
+            setTimeout(() => {
+                status.className = 'save-status';
+            }, 3000);
+        }
+
+        // Image preview
+        document.getElementById('movieImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '<span class="placeholder">No image selected</span>';
+            }
+        });
+
+        // Form submission
+        document.getElementById('movieForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('movieTitle').value;
+            const genre = document.getElementById('movieGenre').value;
+            const year = parseInt(document.getElementById('movieYear').value);
+            const rating = parseFloat(document.getElementById('movieRating').value);
+            const imageInput = document.getElementById('movieImage');
+            const file = imageInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const movie = {
+                        id: Date.now(),
+                        title: title,
+                        genre: genre,
+                        genre2: '',
+                        year: year,
+                        rating: rating,
+                        image: e.target.result
+                    };
+                    
+                    movies.push(movie);
+                    saveMovies();
+                    
+                    // Reset form
+                    document.getElementById('movieForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '<span class="placeholder">No image selected</span>';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Render movies
+        function renderMovies() {
+            const container = document.getElementById('moviesContainer');
+            
+            if (movies.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>No movies in database</h3>
+                        <p>Add a movie using the form on the left</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = movies.map(movie => `
+                <div class="movie-item">
+                    <button class="delete-btn" onclick="deleteMovie(${movie.id})">×</button>
+                    <div class="poster">
+                        <img src="${movie.image}" alt="${movie.title}" onerror="this.style.display='none'; this.parentElement.innerHTML='🎬'">
+                    </div>
+                    <div class="info">
+                        <h3>${movie.title}</h3>
+                        <p>${movie.genre}${movie.genre2 ? ', ' + movie.genre2 : ''} | ${movie.year}</p>
+                        <div class="rating">${'★'.repeat(Math.floor(movie.rating / 2))}${(movie.rating % 2 >= 1) ? '½' : ''} ${movie.rating}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Delete movie
+        async function deleteMovie(id) {
+            movies = movies.filter(m => m.id !== id);
+            await saveMovies();
+        }
+
+        // Logout
+        function logout() {
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+
+        // Initial load
+        loadMovies();
+    </script>
+</body>
+</html>

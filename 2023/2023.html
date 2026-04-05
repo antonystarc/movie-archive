@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies of 2023</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e94560;
+        }
+        .back-btn {
+            color: #e94560;
+            text-decoration: none;
+            font-size: 1.2rem;
+            margin-right: 20px;
+        }
+        header h1 { font-size: 1.8rem; }
+        .movies-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        .movie-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+        .poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .poster {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(45deg, #2d3561, #e94560);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .movie-info { padding: 15px; }
+        .movie-info h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .movie-info p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+        .rating {
+            color: #ffd700;
+            margin-top: 8px;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            grid-column: 1 / -1;
+            color: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="back-btn">← Back</a>
+        <h1>Movies of 2023</h1>
+    </header>
+    <div class="movies-container" id="moviesContainer">
+        <div class="loading">Loading movies...</div>
+    </div>
+
+    <script>
+        const CURRENT_YEAR = 2023;
+        
+        async function loadMovies() {
+            try {
+                const response = await fetch('/api/movies');
+                const data = await response.json();
+                const movies = data.movies.filter(m => m.year === CURRENT_YEAR);
+                
+                const container = document.getElementById('moviesContainer');
+                
+                if (movies.length === 0) {
+                    container.innerHTML = '<div class="loading">No movies found for this year</div>';
+                    return;
+                }
+                
+                container.innerHTML = movies.map(movie => `
+                    <div class="movie-card">
+                        <div class="poster">
+                            <img src="${movie.image}" alt="${movie.title}" onerror="this.parentElement.innerHTML='🎬'">
+                        </div>
+                        <div class="movie-info">
+                            <h3>${movie.title}</h3>
+                            <p>${movie.genre}${movie.genre2 ? ', ' + movie.genre2 : ''}</p>
+                            <div class="rating">${'★'.repeat(Math.floor(movie.rating / 2))}${(movie.rating % 2 >= 1) ? '½' : ''} ${movie.rating}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('moviesContainer').innerHTML = 
+                    '<div class="loading">Error loading movies. Make sure server is running.</div>';
+            }
+        }
+        
+        loadMovies();
+    </script>
+</body>
+</html>

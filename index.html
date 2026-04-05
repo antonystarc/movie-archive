@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search & Posters</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #e94560;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .search-box {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            border: 2px solid #e94560;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        .search-box input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        .search-box button {
+            padding: 15px 30px;
+            border: none;
+            background: #e94560;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .search-box button:hover {
+            background: #ff6b6b;
+        }
+        .years-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .years-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            color: #e94560;
+        }
+        .years-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .year-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .year-card:hover {
+            border-color: #e94560;
+            transform: translateY(-5px);
+            background: rgba(233, 69, 96, 0.1);
+        }
+        .year-card h3 {
+            font-size: 1.5rem;
+        }
+        .year-card p {
+            margin-top: 10px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Movie Search & Posters</h1>
+        <p>Discover movies by year or search for your favorites</p>
+    </header>
+
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for movies...">
+            <button onclick="searchMovies()">Search</button>
+        </div>
+    </div>
+
+    <section class="years-section">
+        <h2>Browse by Year</h2>
+        <div class="years-grid">
+            <a href="2015/2015.html" class="year-card">
+                <h3>2015</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2016/2016.html" class="year-card">
+                <h3>2016</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2017/2017.html" class="year-card">
+                <h3>2017</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2018/2018.html" class="year-card">
+                <h3>2018</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2019/2019.html" class="year-card">
+                <h3>2019</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2020/2020.html" class="year-card">
+                <h3>2020</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2021/2021.html" class="year-card">
+                <h3>2021</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2022/2022.html" class="year-card">
+                <h3>2022</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2023/2023.html" class="year-card">
+                <h3>2023</h3>
+                <p>View Movies</p>
+            </a>
+            <a href="2024/2024.html" class="year-card">
+                <h3>2024</h3>
+                <p>View Movies</p>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>Movie Search & Posters Viewer App</p>
+    </footer>
+
+    <script>
+        function searchMovies() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                alert('Search functionality would search for: ' + query);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchMovies();
+            }
+        });
+    </script>
+</body>
+</html>
