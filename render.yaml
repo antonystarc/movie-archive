@@ -2,6 +2,7 @@ services:
   - type: web
     name: movie-archive
     runtime: node
+    rootDir: .
     buildCommand: npm install
     startCommand: node server.js
     plan: free
