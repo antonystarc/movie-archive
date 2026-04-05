@@ -2,9 +2,8 @@ services:
   - type: web
     name: movie-archive
     runtime: node
-    rootDir: .
-    buildCommand: npm install
-    startCommand: node server.js
+    buildCommand: ./Dummy/build.sh
+    startCommand: ./Dummy/start.sh
     plan: free
     envVars:
       - key: MONGODB_URI
