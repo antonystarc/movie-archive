@@ -362,25 +362,47 @@
             }
         }
 
-        // Save movies to JSON API
-        async function saveMovies() {
+        // Add single movie to database
+        async function addMovie(movie) {
             try {
                 const response = await fetch('/api/movies', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ movies: movies })
+                    body: JSON.stringify(movie)
                 });
                 
                 if (response.ok) {
-                    showStatus('Movies saved to JSON file successfully!', 'success');
-                    renderMovies();
+                    showStatus('Movie added successfully!', 'success');
+                    await loadMovies();
                 } else {
-                    showStatus('Error saving to JSON file', 'error');
+                    showStatus('Error adding movie', 'error');
                 }
             } catch (error) {
-                showStatus('Error saving to JSON file: ' + error.message, 'error');
+                showStatus('Error adding movie: ' + error.message, 'error');
+            }
+        }
+
+        // Delete single movie from database
+        async function deleteMovieFromDB(id) {
+            try {
+                const response = await fetch('/api/movies', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: id })
+                });
+                
+                if (response.ok) {
+                    showStatus('Movie deleted successfully!', 'success');
+                    await loadMovies();
+                } else {
+                    showStatus('Error deleting movie', 'error');
+                }
+            } catch (error) {
+                showStatus('Error deleting movie: ' + error.message, 'error');
             }
         }
 
@@ -435,7 +457,7 @@
                     };
                     
                     movies.push(movie);
-                    saveMovies();
+                    await addMovie(movie);
                     
                     // Reset form
                     document.getElementById('movieForm').reset();
@@ -476,8 +498,7 @@
 
         // Delete movie
         async function deleteMovie(id) {
-            movies = movies.filter(m => m.id !== id);
-            await saveMovies();
+            await deleteMovieFromDB(id);
         }
 
         // Logout
